@@ -327,8 +327,12 @@ sub output_infinitive() {
   	     $hem => 'הם', $hen => 'הן');
     %pname = ($ata => 'יחיד,ז', $at => 'יחיד,נ', 
   		$aten => 'רבים,נ', $atem => 'רבים,ז');
-    %tname = ($past=>'עבר', $present=>'הווה', $future=>'עתיד', 
-		$imperative=>'ציווי', $infinitive=>'מקור', undef=>'-');
+    %tname = ($past=>'<past>',#עבר',
+	      $present=>'<pres>',#'הווה', 
+	      $future=>'<fut>',#'עתיד', 
+		$imperative=>'<imp>',#'ציווי',
+	      $infinitive=>'<inf>',#'מקור',
+	      undef=>'-');
   }
 
   sub new {
