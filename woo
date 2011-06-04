@@ -1332,7 +1332,7 @@ sub output_infinitive() {
     # TODO most of the objectized forms are very bizarre. 
     #      we should decide what to do with them. DEBUG 
     $suf = $suf unless $w->{tense} eq $infinitive; 
-    return $s.$suf.';';
+    return $s.$suf;
   }
 
   sub outword {
@@ -1379,7 +1379,7 @@ sub output_infinitive() {
     $s =~ s/([כמנפצ])$/$fin{$1}/;
     $lemma = $w->past_conj($Word::hu);
     print $lemma."; " if $lemma;
-    print $s." ".$detail."\n";
+    print $s."; ".$detail."\n";
   }
 }
 
