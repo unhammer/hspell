@@ -1338,6 +1338,7 @@ sub output_infinitive() {
   sub outword {
     my ($w, $s) = @_;
     my $detail='';
+    my $lemma='';
     return unless $s;
     if ($detailed_output) {
       my ($tense,$person,$bjtext)=('-','','');
@@ -1377,7 +1378,7 @@ sub output_infinitive() {
     $s =~ s/C/צ'/go;
     $s =~ s/([כמנפצ])$/$fin{$1}/;
     $lemma = $w->past_conj($Word::hu);
-    print $lemma."; ";
+    print $lemma."; " if $lemma;
     print $s." ".$detail."\n";
   }
 }
