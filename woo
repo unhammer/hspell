@@ -1357,7 +1357,11 @@ sub output_infinitive() {
       if ($w->{tense} eq $adjective) {
         $detail = " $person; adj";
       } else {
-        $detail = " $tense.$person; vblex";
+        $detail = " $tense";
+        if ($person) {
+          $detail.= ".$person";
+        }
+        $detail.= "; vblex";
       }
       $detail .= ',סמיכות (skipme)' if $s =~ m/-$/o;
     }
