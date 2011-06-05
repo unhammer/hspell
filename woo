@@ -1391,7 +1391,10 @@ sub output_infinitive() {
     if (!$lemma) {
       $lemma = $w->imperative_conj($Word::ata);
     }
-    print ($lemma ? $lemma : "NOLEMMA");
+    if (!$lemma) {
+      $lemma = $w->present_conj($Word::hu);
+    }
+    print ($lemma ? $lemma : "(skipme)");
     print "; $s; ".$detail."\n";
   }
 }
