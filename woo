@@ -217,7 +217,7 @@ while(<INFILE>){
         print SHEMP ",ים" if ($w->{binyan} eq $Word::qitel && $s =~ m/ות$/o);
         print SHEMP "\n"
       }
-      print "-----\n";
+      print "\n";
     }
     # Create the pa`ul form, when applicable.
     if (${$w->{opts}}{"פעול"} || ${$w->{opts}}{"קל_אפעל"} 
@@ -232,7 +232,7 @@ while(<INFILE>){
 	  else {$w->outword($s.'-')}
 	}
       }
-      print "-----\n" if $s;
+      print "\n" if $s;
   }
   }
 }
@@ -1381,9 +1381,15 @@ sub output_infinitive() {
     $s =~ s/Z/ז'/go;
     $s =~ s/C/צ'/go;
     $s =~ s/([כמנפצ])$/$fin{$1}/;
-    $lemma = $w->past_conj($Word::hu);
-    print $lemma."; " if $lemma;
-    print $s."; ".$detail."\n";
+
+    if ($w->{tense} eq $adjective) {
+      $lemma = $w->_subst_root('qtוl');
+      $lemma =~ s/ה$/י/;
+    } else {
+      $lemma = $w->past_conj($Word::hu);
+    }
+    print ($lemma ? $lemma : "NOLEMMA");
+    print "; $s; ".$detail."\n";
   }
 }
 
