@@ -1346,18 +1346,18 @@ sub output_infinitive() {
       # code it replaces. However, the following named hashes are much faster...
       $tense = $tname{ $w->{tense} };
       if ($w->{guf}) {
-        $person = '.'.$Word::gname{$w->{guf}};
+        $person = $Word::gname{$w->{guf}};
         if ($w->{tense} =~ m/[$present$adjective]/o) {
-          $person = '.'.$Word::pname{$w->{guf}};
+          $person = $Word::pname{$w->{guf}};
         }
       }
       if ($w->{object}) {
         $bjtext=",כינוי/".$Word::gname{$w->{object}} if $w->{object};
       }
       if ($w->{tense} eq $adjective) {
-        $detail = " ת$person";
+        $detail = " $person; adj";
       } else {
-        $detail = " $tense$person; vblex";
+        $detail = " $tense.$person; vblex";
       }
       $detail .= ',סמיכות (skipme)' if $s =~ m/-$/o;
     }
