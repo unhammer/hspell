@@ -1388,6 +1388,9 @@ sub output_infinitive() {
     } else {
       $lemma = $w->past_conj($Word::hu);
     }
+    if (!$lemma) {
+      $lemma = $w->imperative_conj($Word::ata);
+    }
     print ($lemma ? $lemma : "NOLEMMA");
     print "; $s; ".$detail."\n";
   }
