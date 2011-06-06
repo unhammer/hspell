@@ -8,7 +8,7 @@ my ($infile,$c);
 my $detailed_output=0;
 my %fin = ('כ'=>'ך', 'מ'=>'ם', 'נ'=>'ן', 'פ'=>'ף', 'צ'=>'ץ');
 
-if ($#ARGV>=0 && $ARGV[0] eq "-d")
+if (1) # $#ARGV>=0 && $ARGV[0] eq "-d")
 {
   $detailed_output=!$detailed_output;
   shift @ARGV;
@@ -217,7 +217,7 @@ while(<INFILE>){
         print SHEMP ",ים" if ($w->{binyan} eq $Word::qitel && $s =~ m/ות$/o);
         print SHEMP "\n"
       }
-      print "-----\n";
+      print "\n";
     }
     # Create the pa`ul form, when applicable.
     if (${$w->{opts}}{"פעול"} || ${$w->{opts}}{"קל_אפעל"} 
@@ -232,8 +232,8 @@ while(<INFILE>){
 	  else {$w->outword($s.'-')}
 	}
       }
-      print "-----\n" if $s;
-    }
+      print "\n" if $s;
+  }
   }
 }
 
@@ -322,17 +322,15 @@ sub output_infinitive() {
     ($past, $present, $future, $imperative, $infinitive, $adjective) = 
 	(1, 2, 3, 4, 5, 6);
 
-    %gname = ($ani => 'אני', $ata => 'אתה', $at => 'את', $hu => 'הוא',
-  	     $hi => 'היא',  $anu => 'אנו', $atem => 'אתם', $aten => 'אתן',
-  	     $hem => 'הם', $hen => 'הן');
-    %pname = ($ata => 'יחיד,ז', $at => 'יחיד,נ', 
-  		$aten => 'רבים,נ', $atem => 'רבים,ז');
-    %tname = ($past=>'<s n="past">',#עבר',
-	      $present=>'<s n="pres">',#'הווה', 
-	      $future=>'<s n="fut">',#'עתיד', 
-		$imperative=>'<s n="imp">',#'ציווי',
-	      $infinitive=>'<s n="inf">',#'מקור',
-	      undef=>'-');
+    %gname = ($ani => 'p1.sg', $ata => 'p2.m', $at => 'p2.f', $hu =>
+      'p3.m.sg',
+  	     $hi => 'p3.f.sg',  $anu => 'p1.pl', $atem => 'p2.m.pl', $aten
+         => 'p2.f.pl',
+  	     $hem => 'p3.m.pl', $hen => 'p3.f.pl');
+    %pname = ($ata => 'p2.sg.m', $at => 'p2.sg.f', 
+  		$aten => 'p2.pl.f', $atem => 'p2.pl.m');
+    %tname = ($past=>'past', $present=>'pres', $future=>'fut', 
+		$imperative=>'imp', $infinitive=>'inf', undef=>'-');
   }
 
   sub new {
@@ -1333,13 +1331,14 @@ sub output_infinitive() {
 #    $suf = $subject_suf{$bj} if !defined($suf); # TODO is this needed?
     # TODO most of the objectized forms are very bizarre. 
     #      we should decide what to do with them. DEBUG 
-    $suf = $suf.'+' unless $w->{tense} eq $infinitive; 
+    $suf = $suf unless $w->{tense} eq $infinitive; 
     return $s.$suf;
   }
 
   sub outword {
     my ($w, $s) = @_;
     my $detail='';
+    my $lemma='';
     return unless $s;
     if ($detailed_output) {
       my ($tense,$person,$bjtext)=('-','','');
@@ -1347,20 +1346,24 @@ sub output_infinitive() {
       # code it replaces. However, the following named hashes are much faster...
       $tense = $tname{ $w->{tense} };
       if ($w->{guf}) {
-        $person = ','.$Word::gname{$w->{guf}};
+        $person = $Word::gname{$w->{guf}};
         if ($w->{tense} =~ m/[$present$adjective]/o) {
-          $person = ','.$Word::pname{$w->{guf}};
+          $person = $Word::pname{$w->{guf}};
         }
       }
       if ($w->{object}) {
         $bjtext=",כינוי/".$Word::gname{$w->{object}} if $w->{object};
       }
       if ($w->{tense} eq $adjective) {
-        $detail = " ת$person";
+        $detail = " $person; adj";
       } else {
-        $detail = " פ,$tense$person$bjtext";
+        $detail = " $tense";
+        if ($person) {
+          $detail.= ".$person";
+        }
+        $detail.= "; vblex";
       }
-      $detail .= ',סמיכות' if $s =~ m/-$/o;
+      $detail .= ',סמיכות (skipme)' if $s =~ m/-$/o;
     }
     # the following is only an oversimplification of deornanization!!!
     $s =~ s/^w(?=[Iי])/ו/o;
@@ -1378,7 +1381,21 @@ sub output_infinitive() {
     $s =~ s/Z/ז'/go;
     $s =~ s/C/צ'/go;
     $s =~ s/([כמנפצ])$/$fin{$1}/;
-    print $s.$detail."\n";
+
+    if ($w->{tense} eq $adjective) {
+      $lemma = $w->_subst_root('qtוl');
+      $lemma =~ s/ה$/י/;
+    } else {
+      $lemma = $w->past_conj($Word::hu);
+    }
+    if (!$lemma) {
+      $lemma = $w->imperative_conj($Word::ata);
+    }
+    if (!$lemma) {
+      $lemma = $w->present_conj($Word::hu);
+    }
+    print ($lemma ? $lemma : "(skipme)");
+    print "; $s; ".$detail."\n";
   }
 }
 
