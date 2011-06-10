@@ -100,8 +100,8 @@ while(<INFILE>){
           foreach $bj ($Word::ani,$Word::ata,$Word::at,$Word::hu,$Word::hu,$Word::hi,
 		$Word::anu,$Word::atem,$Word::aten,$Word::hem,$Word::hen) {
 	    $w->{second_bj_form} = !$w->{second_bj_form} if $bj eq $Word::hu;
-	    my $n = $w->objectize($s, $bj);
-	    $w->outword($n) if $n;
+      #my $n = $w->objectize($s, $bj);
+      #$w->outword($n) if $n;
           }
         }
       }
@@ -130,8 +130,8 @@ while(<INFILE>){
 	  next if $g eq $Word::aten; # TODO do $aten have objectization??
           foreach $bj ($Word::ani,$Word::ata,$Word::at,$Word::hu,$Word::hi,
 		$Word::anu,$Word::atem,$Word::aten,$Word::hem,$Word::hen) {
-	    my $n = $w->objectize($s, $bj);
-	    $w->outword($n) if $n;
+    #my $n = $w->objectize($s, $bj);
+    #$w->outword($n) if $n;
           }
         }
       }
@@ -150,8 +150,8 @@ while(<INFILE>){
 		$Word::hem,$Word::hen) {
 	    # a trick to flip second_bj_form for the second time of bj=hu/hi
 	    $w->{second_bj_form} = !$w->{second_bj_form} if $bj eq $Word::hu;
-	    my $n = $w->objectize($s, $bj);
-	    $w->outword($n) if $n;
+      #my $n = $w->objectize($s, $bj);
+      #$w->outword($n) if $n;
           }
         }
       }
@@ -170,8 +170,8 @@ while(<INFILE>){
 	if (defined($s) && $transitive{$w->{binyan}}) {
           foreach $bj ($Word::ani,$Word::ata,$Word::at,$Word::hu,$Word::hi,
 		$Word::anu,$Word::atem,$Word::aten,$Word::hem,$Word::hen) {
-	    my $n = $w->objectize($s, $bj);
-	    $w->outword($n) if $n;
+    #my $n = $w->objectize($s, $bj);
+    #$w->outword($n) if $n;
           }
         }
         $w->{object} = undef; #clear objectization
@@ -246,7 +246,7 @@ sub output_infinitive() {
   # code is less-than-perfect, it relies on 'ל' so we substitute the lamed
   # with L only temporarily. TODO: correct this stupidity.
   my $tmps = $s;
-  $tmps =~ s/^ל/L/ if !$opts{'מקור_אבד_פנ'};
+  #$tmps =~ s/^ל/L/ if !$opts{'מקור_אבד_פנ'};
   $w->outword($tmps);
   # infinitives that lost their p"n, should regain it in their bkm form.
   # Here, with this B prefix, we allow only the bet form.
@@ -268,21 +268,21 @@ sub output_infinitive() {
   # differentiation is valid or correct, and failed to find references to 
   # support my gut feeling. Thus, on the mean while, I produce a waw-less 
   # form, as done by rav-millim.
-    if ($is_trans) {
-      foreach $bj ($Word::ani,$Word::ata,$Word::at,$Word::hu,$Word::hi,
-    	$Word::anu,$Word::atem,$Word::aten,$Word::hem,$Word::hen) {
-        my $n = $w->objectize($s, $bj);
-        $w->outword($n) if $n;
-      }
-      my $n = $w->objectize($s, $Word::ani, SUBJECTIZE);
-      $w->outword($n) if $n;
-    } else { # output only subjectizations for intransitive verbs.
-      foreach $bj ($Word::ani,$Word::ata,$Word::hu,$Word::hi,
-    	$Word::anu,$Word::atem,$Word::aten,$Word::hem,$Word::hen) {
-        my $n = $w->objectize($s, $bj, SUBJECTIZE);
-        $w->outword($n) if $n;
-      }
-    }
+  #if ($is_trans) {
+      #foreach $bj ($Word::ani,$Word::ata,$Word::at,$Word::hu,$Word::hi,
+      #$Word::anu,$Word::atem,$Word::aten,$Word::hem,$Word::hen) {
+      #my $n = $w->objectize($s, $bj);
+      #$w->outword($n) if $n;
+      #}
+      #my $n = $w->objectize($s, $Word::ani, SUBJECTIZE);
+      #$w->outword($n) if $n;
+      #} else { # output only subjectizations for intransitive verbs.
+      #foreach $bj ($Word::ani,$Word::ata,$Word::hu,$Word::hi,
+      #$Word::anu,$Word::atem,$Word::aten,$Word::hem,$Word::hen) {
+      #my $n = $w->objectize($s, $bj, SUBJECTIZE);
+      #$w->outword($n) if $n;
+      #}
+      # }
 }
 
 {
@@ -1335,6 +1335,27 @@ sub output_infinitive() {
     return $s.$suf;
   }
 
+  sub fixstring {
+    # the following is only an oversimplification of deornanization!!!
+    my ($s) = @_;
+    $s =~ s/^w(?=[Iי])/ו/o;
+    $s =~ s/[wו][wו]/וו/o;
+    $s =~ s/(?<=[ו])w/ו/o;
+    $s =~ s/w/וו/o;
+    $s =~ s/y(?=[Iיו])/י/o;
+    $s =~ s/(?<=[Iיו])y/י/o;
+    $s =~ s/יIי/יI/o; # for יירה
+    $s =~ s/yה$/יה/o;
+    $s =~ s/y/יי/o;
+    $s =~ s/h/ה/o;
+    $s =~ s/-$//o; # if nadav doesn't print this stupid -, so would I.
+    $s =~ s/J/ג'/go;
+    $s =~ s/Z/ז'/go;
+    $s =~ s/C/צ'/go;
+    $s =~ s/([כמנפצ])$/$fin{$1}/;
+    return $s;
+  }
+
   sub outword {
     my ($w, $s) = @_;
     my $detail='';
@@ -1365,22 +1386,7 @@ sub output_infinitive() {
       }
       $detail .= ',סמיכות (skipme)' if $s =~ m/-$/o;
     }
-    # the following is only an oversimplification of deornanization!!!
-    $s =~ s/^w(?=[Iי])/ו/o;
-    $s =~ s/[wו][wו]/וו/o;
-    $s =~ s/(?<=[ו])w/ו/o;
-    $s =~ s/w/וו/o;
-    $s =~ s/y(?=[Iיו])/י/o;
-    $s =~ s/(?<=[Iיו])y/י/o;
-    $s =~ s/יIי/יI/o; # for יירה
-    $s =~ s/yה$/יה/o;
-    $s =~ s/y/יי/o;
-    $s =~ s/h/ה/o;
-    $s =~ s/-$//o; # if nadav doesn't print this stupid -, so would I.
-    $s =~ s/J/ג'/go;
-    $s =~ s/Z/ז'/go;
-    $s =~ s/C/צ'/go;
-    $s =~ s/([כמנפצ])$/$fin{$1}/;
+    $s = fixstring($s);
 
     if ($w->{tense} eq $adjective) {
       $lemma = $w->_subst_root('qtוl');
@@ -1394,6 +1400,8 @@ sub output_infinitive() {
     if (!$lemma) {
       $lemma = $w->present_conj($Word::hu);
     }
+    $lemma = fixstring($lemma) if $lemma;
+
     print ($lemma ? $lemma : "(skipme)");
     print "; $s; ".$detail."\n";
   }
