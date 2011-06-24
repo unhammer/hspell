@@ -1380,6 +1380,9 @@ sub output_infinitive() {
       } else {
         $detail = " $tense";
         if ($person) {
+          if ($tense eq "pres") { # present form is for all persons
+            $person = substr $person, 3;
+          }
           $detail.= ".$person";
         }
         $detail.= "; vblex";
