@@ -323,12 +323,12 @@ sub output_infinitive() {
 	(1, 2, 3, 4, 5, 6);
 
     %gname = ($ani => 'p1.sg', $ata => 'p2.m', $at => 'p2.f', $hu =>
-      'p3.sg.m',
-  	     $hi => 'p3.sg.f',  $anu => 'p1.pl', $atem => 'p2.pl.m', $aten
-         => 'p2.pl.f',
-  	     $hem => 'p3.pl.m', $hen => 'p3.pl.f');
-    %pname = ($ata => 'p2.sg.m', $at => 'p2.sg.f', 
-  		$aten => 'p2.pl.f', $atem => 'p2.pl.m');
+      'p3.m.sg',
+  	     $hi => 'p3.f.sg',  $anu => 'p1.pl', $atem => 'p2.m.pl', $aten
+         => 'p2.f.pl',
+  	     $hem => 'p3.m.pl', $hen => 'p3.f.pl');
+    %pname = ($ata => 'p2.m.sg', $at => 'p2.f.sg', 
+  		$aten => 'p2.f.pl', $atem => 'p2.m.pl');
     %tname = ($past=>'past', $present=>'pres', $future=>'fut', 
 		$imperative=>'imp', $infinitive=>'inf', undef=>'-');
   }
