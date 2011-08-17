@@ -322,7 +322,7 @@ sub output_infinitive() {
     ($past, $present, $future, $imperative, $infinitive, $adjective) = 
 	(1, 2, 3, 4, 5, 6);
 
-    %gname = ($ani => 'p1.sg', $ata => 'p2.m', $at => 'p2.f', $hu =>
+    %gname = ($ani => 'p1.sg', $ata => 'p2.m.sg', $at => 'p2.f.sg', $hu =>
       'p3.m.sg',
   	     $hi => 'p3.f.sg',  $anu => 'p1.pl', $atem => 'p2.m.pl', $aten
          => 'p2.f.pl',
